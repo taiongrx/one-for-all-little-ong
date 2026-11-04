@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ONE FOR ALL (little-ong) — Unified Cloud & Intranet App Launchpad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans Thai"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+      background-color: #070b14;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+    /* Ambient cosmic background glow */
+    .cosmic-bg {
+      background:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.16) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        linear-gradient(180deg, #060913 0%, #0b1120 50%, #070b14 100%);
+    }
+    /* Glassmorphic surface */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.55) 0%, rgba(15, 23, 42, 0.75) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(99, 102, 241, 0.45);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(99, 102, 241, 0.25);
+    }
+    /* Squircle macOS / iPadOS App Icon */
+    .app-squircle {
+      border-radius: 26%;
+      position: relative;
+      box-shadow:
+        0 14px 28px -6px rgba(0, 0, 0, 0.55),
+        inset 0 2px 3px rgba(255, 255, 255, 0.35),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.35);
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .app-icon-trigger:hover .app-squircle {
+      transform: scale(1.09) translateY(-4px);
+      box-shadow:
+        0 22px 38px -8px rgba(0, 0, 0, 0.7),
+        0 0 28px 2px rgba(255, 255, 255, 0.14),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    }
+    .app-icon-trigger:active .app-squircle {
+      transform: scale(0.95);
+    }
+    /* Glossy reflection overlay on squircle */
+    .app-squircle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 26%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.03) 45%, transparent 60%);
+      pointer-events: none;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #070b14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="cosmic-bg min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation & Command Bar -->
+  <header class="sticky top-0 z-30 glass-panel border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        
+        <!-- Brand Identity -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/25">
+              <div class="w-full h-full bg-slate-950/80 rounded-[14px] flex items-center justify-center text-2xl">
+                ⚡
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5">
+                <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-200 to-emerald-200 bg-clip-text text-transparent">
+                  ONE FOR ALL
+                </h1>
+                <span class="px-2 py-0.5 text-[11px] font-mono font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+                  little-ong
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                <span>ศูนย์รวมโปรเจกต์ Cloud (Vercel) & Intranet (รพร.สายบุรี 11460)</span>
+                <span class="hidden sm:inline text-slate-600">•</span>
+                <span id="dbStatusBadge" class="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Connecting DB...
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Mobile Add Button -->
+          <button onclick="openAppModal()" class="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>เพิ่มแอป</span>
+          </button>
+        </div>
+
+        <!-- Search & Action Controls -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Search Box -->
+          <div class="relative flex-1 min-w-[220px] sm:w-64">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="ค้นหาชื่อแอป, พอร์ต (8050, 8443), IP..."
+              oninput="handleSearch(this.value)"
+              class="w-full pl-9 pr-14 py-2 rounded-xl bg-slate-900/80 border border-white/10 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition"
+            />
+            <kbd class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-800 rounded border border-white/10">
+              Ctrl+K
+            </kbd>
+          </div>
+
+          <!-- Launch Target Mode Selector -->
+          <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10" title="เลือกรูปแบบลิงก์เวลาคลิกที่ไอคอนแอป">
+            <button onclick="setLaunchMode('SMART')" id="modeBtn-SMART" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1 bg-indigo-600 text-white shadow">
+              <span>⚡</span><span class="hidden md:inline">อัตโนมัติ</span>
+            </button>
+            <button onclick="setLaunchMode('CLOUD')" id="modeBtn-CLOUD" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>☁️</span><span class="hidden md:inline">Cloud/Vercel</span>
+            </button>
+            <button onclick="setLaunchMode('INTRANET')" id="modeBtn-INTRANET" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>🏥</span><span class="hidden md:inline">IP โรงพยาบาล</span>
+            </button>
+            <button onclick="setLaunchMode('HOSTNAME')" id="modeBtn-HOSTNAME" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>💻</span><span class="hidden md:inline">drug-330</span>
+            </button>
+          </div>
+
+          <!-- View Toggle (Launchpad Icons vs Detailed Cards) -->
+          <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10">
+            <button onclick="setViewMode('LAUNCHPAD')" id="viewBtn-LAUNCHPAD" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white transition flex items-center gap-1" title="มุมมองไอคอน Launchpad">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Icon Grid</span>
+            </button>
+            <button onclick="setViewMode('CARDS')" id="viewBtn-CARDS" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1" title="มุมมองการ์ดแสดงรายละเอียดครบ">
+              <i data-lucide="stretch-horizontal" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Detailed</span>
+            </button>
+          </div>
+
+          <!-- Ping / Health Check Button -->
+          <button onclick="runLiveHealthCheck()" id="pingBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-white/10 text-xs font-medium text-emerald-300 transition" title="ตรวจสอบสถานะออนไลน์ทุกพอร์ตและ Cloud">
+            <i data-lucide="activity" class="w-4 h-4" id="pingIcon"></i>
+            <span class="hidden xl:inline" id="pingBtnText">เช็คสถานะ</span>
+          </button>
+
+          <!-- Scan Another PC Modal Trigger -->
+          <button onclick="openScannerModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-xs font-semibold text-cyan-300 transition cursor-pointer" title="รวบรวมโปรเจกต์จากเครื่องอื่นเข้ามาใน Portal นี้">
+            <i data-lucide="radar" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">ดึงจากเครื่องอื่น</span>
+          </button>
+
+          <!-- Add New App Button -->
+          <button onclick="openAppModal()" class="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition cursor-pointer">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>เพิ่มโปรเจกต์ใหม่</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-7">
+
+    <!-- Status Summary & Environment Filter Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel rounded-2xl p-3.5">
+      <!-- Environment & Category Filter Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" id="filterTabs">
+        <button onclick="setFilter('ALL')" data-filter="ALL" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow transition whitespace-nowrap">
+          🌟 ทั้งหมด (<span id="count-ALL">0</span>)
+        </button>
+        <button onclick="setFilter('PINNED')" data-filter="PINNED" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          📌 ปักหมุดด่วน (<span id="count-PINNED">0</span>)
+        </button>
+        <button onclick="setFilter('VERCEL')" data-filter="VERCEL" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          ☁️ Cloud / Vercel (<span id="count-VERCEL">0</span>)
+        </button>
+        <button onclick="setFilter('INTRANET')" data-filter="INTRANET" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          🏥 Intranet LAN (<span id="count-INTRANET">0</span>)
+        </button>
+        <button onclick="setFilter('PHARMACY')" data-filter="PHARMACY" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          💊 คลังยา & บริบาลคลินิก
+        </button>
+        <button onclick="setFilter('ADMIN_AI')" data-filter="ADMIN_AI" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          🤖 บริหารจัดการ & AI
+        </button>
+      </div>
+
+      <!-- Network Info & Quick Tools -->
+      <div class="flex items-center justify-between md:justify-end gap-3 text-xs border-t md:border-t-0 border-white/10 pt-2.5 md:pt-0">
+        <div class="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
+          <span class="px-2 py-1 rounded-lg bg-slate-900 border border-white/10 text-slate-300" id="lanIpDisplay">
+            LAN: 192.168.3.186
+          </span>
+          <span class="px-2 py-1 rounded-lg bg-slate-900 border border-white/10 text-emerald-400" id="onlineSummaryBadge">
+            กำลังตรวจพอร์ต...
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button onclick="syncMachineProjects()" class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition" title="ดึงรายการโปรเจกต์หลักในเครื่อง DRUG-330 กลับมา">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">ซิงค์โปรเจกต์ในเครื่อง</span>
+          </button>
+          <button onclick="exportAppsJson()" class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition" title="ส่งออกไฟล์สำรองข้อมูล JSON">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          </button>
+          <label class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition cursor-pointer" title="นำเข้าไฟล์ JSON">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <input type="file" accept=".json" class="hidden" onchange="importAppsJson(event)" />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error / Disconnected Banner (Zero Mockup Policy Honesty) -->
+    <div id="dbErrorBanner" class="hidden rounded-2xl bg-rose-950/70 border border-rose-500/40 p-4 text-rose-200 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="alert-Octagon" class="w-6 h-6 text-rose-400 shrink-0"></i>
+        <div>
+          <h3 class="text-sm font-bold">ไม่สามารถเชื่อมต่อฐานข้อมูลได้ (Database Disconnected)</h3>
+          <p class="text-xs text-rose-300 mt-0.5" id="dbErrorText"></p>
+        </div>
+      </div>
+      <button onclick="loadApps()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">
+        ลองเชื่อมต่อใหม่
+      </button>
+    </div>
+
+    <!-- Empty State (0 Records - Zero Mockup Policy) -->
+    <div id="emptyStateContainer" class="hidden glass-panel rounded-3xl p-12 text-center max-w-lg mx-auto my-8">
+      <div class="w-16 h-16 rounded-2xl bg-slate-800/90 border border-white/10 flex items-center justify-center mx-auto text-3xl mb-4">
+        📭
+      </div>
+      <h2 class="text-lg font-bold text-white">ไม่มีรายการแอปพลิเคชัน (0 รายการ)</h2>
+      <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+        ไม่พบข้อมูลโปรเจกต์ที่ตรงกับเงื่อนไข หรือยังไม่มีรายการในฐานข้อมูลจริง (ระบบปฏิบัติตามกฎ Zero Mockup Policy ไม่สร้างข้อมูลจำลอง)
+      </p>
+      <div class="flex items-center justify-center gap-3 mt-6">
+        <button onclick="openAppModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-indigo-600/30">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>เพิ่มโปรเจกต์ใหม่</span>
+        </button>
+        <button onclick="syncMachineProjects()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5">
+          <i data-lucide="cpu" class="w-4 h-4"></i>
+          <span>ดึงโปรเจกต์จริงในเครื่อง DRUG-330</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dynamic App Launchpad / Cards Container -->
+    <div id="appsWorkspace" class="space-y-8"></div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-4 px-6 text-center text-xs text-slate-500 glass-panel mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <span class="font-semibold text-slate-400">ONE FOR ALL (little-ong)</span> — Unified Cloud & Intranet Application Launchpad
+      </div>
+      <div class="flex items-center gap-3 font-mono text-[11px]">
+        <span>Zero Mockup Verified</span>
+        <span>•</span>
+        <span>Real DB Sync (Turso Cloud + SQLite)</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Add / Edit Application Modal -->
+  <div id="appModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="glass-panel bg-slate-900/95 border border-white/15 rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl my-8">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+        <div class="flex items-center gap-3">
+          <div id="modalPreviewSquircle" class="w-12 h-12 app-squircle bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl">
+            🚀
+          </div>
+          <div>
+            <h2 id="modalTitle" class="text-base sm:text-lg font-bold text-white">เพิ่มโปรเจกต์ / แอปพลิเคชันใหม่</h2>
+            <p class="text-xs text-slate-400">กรอกลิงก์ Vercel Cloud หรือ IP:Port ภายในโรงพยาบาล</p>
+          </div>
+        </div>
+        <button onclick="closeAppModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="appForm" onsubmit="saveAppForm(event)" class="space-y-4">
+        <input type="hidden" id="formAppId" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">ชื่อโปรเจกต์ / แอปพลิเคชัน *</label>
+            <input id="formName" type="text" required placeholder="เช่น PLUTO Pharmacy Intelligence"
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">คำโปรยสั้นๆ (Subtitle)</label>
+            <input id="formSubtitle" type="text" placeholder="เช่น ระบบพยากรณ์คลังยา Port 8050"
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">ประเภทการเชื่อมต่อ *</label>
+            <select id="formEnvType" onchange="autoBuildFormUrl()"
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none">
+              <option value="HYBRID">⚡ HYBRID (มีทั้ง Intranet & Vercel)</option>
+              <option value="VERCEL">☁️ VERCEL / CLOUD</option>
+              <option value="INTRANET">🏥 INTRANET (IP:Port ภายใน)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">หมวดหมู่ระบบงาน</label>
+            <input id="formCategory" type="text" list="categoryList" placeholder="เช่น ระบบเภสัชกรรม & คลังเวชภัณฑ์"
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+            <datalist id="categoryList">
+              <option value="ระบบเภสัชกรรม & คลังเวชภัณฑ์"></option>
+              <option value="บริบาลเภสัชกรรมคลินิก (CDSS)"></option>
+              <option value="ระบบบริหารจัดการ & AI"></option>
+            </datalist>
+          </div>
+          <div class="flex items-end pb-1">
+            <label class="flex items-center gap-2.5 cursor-pointer select-none px-3.5 py-2 rounded-xl bg-slate-950/60 border border-white/10 w-full">
+              <input id="formPinned" type="checkbox" class="w-4 h-4 accent-indigo-500 rounded" />
+              <span class="text-xs font-semibold text-amber-300">📌 ปักหมุดไว้แถวบนสุด</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Smart IP + Port Builder -->
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <i data-lucide="link" class="w-3.5 h-3.5"></i>
+              ตั้งค่า URL / IP Address / Port (กรอกแค่ IP กับ Port ระบบสร้างลิงก์ให้อัตโนมัติ)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-12 gap-2.5">
+            <div class="col-span-3 sm:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1">Protocol</label>
+              <select id="formProtocol" onchange="autoBuildFormUrl()"
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white">
+                <option value="http">http://</option>
+                <option value="https">https://</option>
+              </select>
+            </div>
+            <div class="col-span-9 sm:col-span-5">
+              <label class="block text-[11px] text-slate-400 mb-1">IP หรือ Domain (เช่น 192.168.3.186)</label>
+              <input id="formHost" type="text" oninput="autoBuildFormUrl()" placeholder="192.168.3.186 หรือ app.vercel.app"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
+            </div>
+            <div class="col-span-5 sm:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1">Port (ถ้ามี)</label>
+              <input id="formPort" type="text" oninput="autoBuildFormUrl()" placeholder="8050"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-emerald-300" />
+            </div>
+            <div class="col-span-7 sm:col-span-3">
+              <label class="block text-[11px] text-slate-400 mb-1">Path ต่อท้าย</label>
+              <input id="formPath" type="text" oninput="autoBuildFormUrl()" placeholder="/pluto"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            <div>
+              <label class="block text-[11px] text-emerald-300 mb-1">🏥 ลิงก์ Intranet (IP:Port ภายใน รพ.)</label>
+              <input id="formIntranetUrl" type="text" placeholder="http://192.168.3.186:8050/pluto"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-sky-300 mb-1">☁️ ลิงก์ Cloud / Vercel (ถ้ามี)</label>
+              <input id="formCloudUrl" type="text" placeholder="https://my-project.vercel.app"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">🎯 ลิงก์หลักเมื่อคลิกไอคอน (Primary URL) *</label>
+              <input id="formFullUrl" type="text" required placeholder="https://... หรือ http://192.168.3.186:..."
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-indigo-500/40 text-xs font-mono text-indigo-200" />
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">🔒 ลิงก์สำรอง / HTTPS PWA / Port สำรอง</label>
+              <input id="formHttpsUrl" type="text" placeholder="https://192.168.3.186:8443/medusa"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Emoji & Color Gradient Picker -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">เลือกไอคอน Emoji ประจำแอป</label>
+            <div class="flex items-center gap-2">
+              <input id="formEmoji" type="text" value="🚀" oninput="updateModalPreview()"
+                class="w-14 text-center py-1.5 rounded-xl bg-slate-950 border border-white/15 text-xl" />
+              <div class="flex flex-wrap gap-1 flex-1" id="emojiQuickList">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">โทนสีไอคอน (Gradient Theme)</label>
+            <select id="formColor" onchange="updateModalPreview()"
+              class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 text-xs text-white">
+              <option value="from-indigo-500 via-purple-500 to-pink-500">🌌 Cosmic Indigo & Pink</option>
+              <option value="from-emerald-500 via-teal-500 to-cyan-600">🌿 Emerald Vault</option>
+              <option value="from-rose-500 via-red-500 to-orange-500">🐍 Crimson Clinical</option>
+              <option value="from-cyan-500 via-blue-500 to-indigo-600">🦠 Ocean Blue</option>
+              <option value="from-amber-500 via-orange-500 to-red-500">🤝 Sunset Amber</option>
+              <option value="from-blue-600 via-indigo-600 to-violet-600">🏥 Royal Hospital</option>
+              <option value="from-teal-500 via-emerald-500 to-green-600">💊 Pharmacy Mint</option>
+              <option value="from-fuchsia-600 via-purple-600 to-indigo-700">🤖 Neural Purple</option>
+              <option value="from-slate-600 via-zinc-700 to-neutral-800">🛰️ Titanium Dark</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">โฟลเดอร์โปรเจกต์ในเครื่อง (ถ้ามี)</label>
+            <input id="formLocalFolder" type="text" placeholder="D:\TAIONG\forcast"
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-xs font-mono text-slate-300" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">รายละเอียดเพิ่มเติม</label>
+            <input id="formDescription" type="text" placeholder="คำอธิบายระบบงาน..."
+              class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-xs text-slate-300" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between gap-3 pt-3 border-t border-white/10">
+          <div>
+            <button type="button" id="modalDeleteBtn" onclick="deleteFromModal()" class="hidden px-3.5 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/30 text-xs font-semibold text-rose-300 flex items-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>ลบโปรเจกต์นี้</span>
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="closeAppModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">
+              ยกเลิก
+            </button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-xs font-bold text-white shadow-lg shadow-indigo-600/30">
+              บันทึกโปรเจกต์
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cross-Machine Auto-Scanner Modal -->
+  <div id="scannerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="glass-panel bg-slate-900/95 border border-cyan-500/30 rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl my-8">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-2xl shadow-lg">
+            📡
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-white">รวบรวมโปรเจกต์จากเครื่องอื่นเข้าสู่ ONE FOR ALL</h2>
+            <p class="text-xs text-slate-400">สแกนพอร์ตเว็บ, IP Address และโปรเจกต์ Vercel จากเครื่องไหนก็ได้ขึ้นมารวมที่หน้านี้</p>
+          </div>
+        </div>
+        <button onclick="closeScannerModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300">
+        <!-- Method 1: 1-Click .BAT Download -->
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/25 space-y-2.5">
+          <div class="font-bold text-cyan-300 text-sm flex items-center gap-2">
+            <span>วิธีที่ 1: เปิดหน้าเว็บนี้ที่เครื่องอื่น แล้วกดดาวน์โหลดตัวสแกน (.bat)</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed">
+            เมื่อไปที่เครื่องคอมพิวเตอร์อีกเครื่อง ให้เข้าเว็บ <span class="text-white font-mono">https://one-for-all-little-ong.vercel.app</span> แล้วกดปุ่มด้านล่างเพื่อดาวน์โหลดไฟล์ <b>Scan_This_PC_To_OneForAll.bat</b> ไปดับเบิลคลิกได้เลย ระบบจะค้นหา IP, พอร์ตเว็บ และโปรเจกต์ในเครื่องนั้นแล้วส่งขึ้นมารวมบน Cloud อัตโนมัติ!
+          </p>
+          <div class="pt-1">
+            <a href="/api/scanner-script.bat" download="Scan_This_PC_To_OneForAll.bat"
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/25 transition">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>ดาวน์โหลด Scan_This_PC_To_OneForAll.bat</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Method 2: 1-Line PowerShell Command -->
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-2">
+          <div class="font-bold text-indigo-300 text-sm">
+            วิธีที่ 2: รันคำสั่งบรรทัดเดียวใน PowerShell ที่เครื่องอื่น
+          </div>
+          <p class="text-slate-400">คัดลอกคำสั่งนี้ไปวางใน PowerShell ของเครื่องอื่นแล้วกด Enter ได้ทันที:</p>
+          <div class="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-white/10 font-mono text-[11px] text-emerald-300">
+            <code class="flex-1 overflow-x-auto whitespace-nowrap" id="psOneLiner">irm https://one-for-all-little-ong.vercel.app/api/scanner-script.py | python -</code>
+            <button onclick="copyUrl(document.getElementById('psOneLiner').textContent, 'คำสั่ง PowerShell')"
+              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-[11px] shrink-0">
+              คัดลอก
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-4 mt-4 border-t border-white/10">
+        <button onclick="closeScannerModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
