@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ONE FOR ALL (little-ong) — Unified Cloud & Intranet App Launchpad</title>
+  <title>ONE FOR ALL (little-ong) — Interactive Cloud & Intranet OS Launchpad</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,176 +25,203 @@
   <style>
     body {
       font-family: 'Inter', 'Noto Sans Thai', sans-serif;
-      background-color: #070b14;
+      background-color: #050811;
       color: #f8fafc;
       overflow-x: hidden;
     }
-    /* Ambient cosmic background glow */
+    /* Animated interactive aurora background */
     .cosmic-bg {
       background:
-        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.16) 0%, transparent 40%),
-        radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
-        radial-gradient(circle at 50% 85%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
-        linear-gradient(180deg, #060913 0%, #0b1120 50%, #070b14 100%);
+        radial-gradient(circle at var(--mouse-x, 20%) var(--mouse-y, 20%), rgba(99, 102, 241, 0.18) 0%, transparent 35%),
+        radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 15% 85%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        linear-gradient(180deg, #050811 0%, #0a101f 50%, #050811 100%);
     }
-    /* Glassmorphic surface */
     .glass-panel {
-      background: rgba(15, 23, 42, 0.68);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
     }
     .glass-card {
-      background: linear-gradient(145deg, rgba(30, 41, 59, 0.55) 0%, rgba(15, 23, 42, 0.75) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.52) 0%, rgba(15, 23, 42, 0.78) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 255, 255, 0.09);
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+      transform-style: preserve-3d;
     }
     .glass-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(99, 102, 241, 0.45);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 22px 44px -15px rgba(0, 0, 0, 0.7), 0 0 30px -5px rgba(99, 102, 241, 0.28);
     }
-    /* Squircle macOS / iPadOS App Icon */
+    .glass-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.95);
+      border: 2px dashed #6366f1;
+    }
+    .glass-card.drag-over {
+      border: 2px solid #34d399;
+      box-shadow: 0 0 25px rgba(52, 211, 153, 0.35);
+    }
+    /* 3D Squircle App Icon */
     .app-squircle {
       border-radius: 26%;
       position: relative;
       box-shadow:
-        0 14px 28px -6px rgba(0, 0, 0, 0.55),
-        inset 0 2px 3px rgba(255, 255, 255, 0.35),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.35);
-      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        0 16px 32px -6px rgba(0, 0, 0, 0.65),
+        inset 0 2px 4px rgba(255, 255, 255, 0.42),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.42);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
     }
     .app-icon-trigger:hover .app-squircle {
-      transform: scale(1.09) translateY(-4px);
+      transform: scale(1.1) translateY(-5px) rotate(-1.5deg);
       box-shadow:
-        0 22px 38px -8px rgba(0, 0, 0, 0.7),
-        0 0 28px 2px rgba(255, 255, 255, 0.14),
-        inset 0 2px 4px rgba(255, 255, 255, 0.5);
+        0 24px 42px -8px rgba(0, 0, 0, 0.78),
+        0 0 32px 2px rgba(255, 255, 255, 0.18),
+        inset 0 2px 5px rgba(255, 255, 255, 0.55);
     }
     .app-icon-trigger:active .app-squircle {
-      transform: scale(0.95);
+      transform: scale(0.94);
     }
-    /* Glossy reflection overlay on squircle */
     .app-squircle::after {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: 26%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.03) 45%, transparent 60%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.04) 45%, transparent 62%);
       pointer-events: none;
     }
-    /* Custom scrollbar */
+    /* Subtle floating pulse for vector icons */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+    }
+    .icon-svg-anim {
+      animation: floatSlow 4s ease-in-out infinite;
+    }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #070b14; }
+    ::-webkit-scrollbar-track { background: #050811; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
 </head>
-<body class="cosmic-bg min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="cosmic-bg min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white" id="bodyRoot">
 
-  <!-- Top Navigation & Command Bar -->
+  <!-- Top Navigation & Interactive Command Bar -->
   <header class="sticky top-0 z-30 glass-panel border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3.5">
         
         <!-- Brand Identity -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/25">
-              <div class="w-full h-full bg-slate-950/80 rounded-[14px] flex items-center justify-center text-2xl">
-                ⚡
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/30 cursor-pointer" onclick="openSpotlight()">
+              <div class="w-full h-full bg-slate-950/85 rounded-[14px] flex items-center justify-center">
+                <svg class="w-6 h-6 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill=" rgba(99,102,241,0.25)"/>
+                </svg>
               </div>
             </div>
             <div>
-              <div class="flex items-center gap-2.5">
+              <div class="flex items-center gap-2">
                 <h1 class="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-200 to-emerald-200 bg-clip-text text-transparent">
                   ONE FOR ALL
                 </h1>
-                <span class="px-2 py-0.5 text-[11px] font-mono font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
-                  little-ong
+                <span class="px-2 py-0.5 text-[10px] font-mono font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+                  little-ong OS
                 </span>
               </div>
-              <p class="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                <span>ศูนย์รวมโปรเจกต์ Cloud (Vercel) & Intranet (รพร.สายบุรี 11460)</span>
+              <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                <span>Interactive Cloud & Intranet Launchpad</span>
                 <span class="hidden sm:inline text-slate-600">•</span>
                 <span id="dbStatusBadge" class="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Connecting DB...
+                  Connecting...
                 </span>
               </p>
             </div>
           </div>
 
-          <!-- Mobile Add Button -->
-          <button onclick="openAppModal()" class="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            <span>เพิ่มแอป</span>
-          </button>
+          <div class="flex items-center gap-1.5 lg:hidden">
+            <button onclick="openPromptStudioModal()" class="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-400/30 text-xs">
+              ✨
+            </button>
+            <button onclick="openAppModal()" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>เพิ่มแอป</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Search & Action Controls -->
-        <div class="flex flex-wrap items-center gap-2.5">
-          <!-- Search Box -->
-          <div class="relative flex-1 min-w-[220px] sm:w-64">
+        <!-- Interactive Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Interactive Search / Spotlight Trigger -->
+          <div class="relative flex-1 min-w-[200px] sm:w-60">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
             <input
               id="searchInput"
               type="text"
-              placeholder="ค้นหาชื่อแอป, พอร์ต (8050, 8443), IP..."
+              placeholder="ค้นหาด่วน หรือกด Ctrl+K..."
               oninput="handleSearch(this.value)"
-              class="w-full pl-9 pr-14 py-2 rounded-xl bg-slate-900/80 border border-white/10 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition"
+              class="w-full pl-9 pr-14 py-1.5 rounded-xl bg-slate-900/85 border border-white/10 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition"
             />
-            <kbd class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-800 rounded border border-white/10">
+            <button onclick="openSpotlight()" class=" absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-indigo-300 bg-indigo-950/80 hover:bg-indigo-900 rounded border border-indigo-400/30 transition" title="เปิด Spotlight Launcher">
               Ctrl+K
-            </kbd>
+            </button>
           </div>
 
           <!-- Launch Target Mode Selector -->
           <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10" title="เลือกรูปแบบลิงก์เวลาคลิกที่ไอคอนแอป">
-            <button onclick="setLaunchMode('SMART')" id="modeBtn-SMART" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1 bg-indigo-600 text-white shadow">
-              <span>⚡</span><span class="hidden md:inline">อัตโนมัติ</span>
+            <button onclick="setLaunchMode('SMART')" id="modeBtn-SMART" class="launch-mode-btn px-2 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1 bg-indigo-600 text-white shadow">
+              <span>⚡</span><span class="hidden md:inline">Auto</span>
             </button>
-            <button onclick="setLaunchMode('CLOUD')" id="modeBtn-CLOUD" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
-              <span>☁️</span><span class="hidden md:inline">Cloud/Vercel</span>
+            <button onclick="setLaunchMode('CLOUD')" id="modeBtn-CLOUD" class="launch-mode-btn px-2 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>☁️</span><span class="hidden md:inline">Cloud</span>
             </button>
-            <button onclick="setLaunchMode('INTRANET')" id="modeBtn-INTRANET" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
-              <span>🏥</span><span class="hidden md:inline">IP โรงพยาบาล</span>
+            <button onclick="setLaunchMode('INTRANET')" id="modeBtn-INTRANET" class="launch-mode-btn px-2 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>🏥</span><span class="hidden md:inline">LAN IP</span>
             </button>
-            <button onclick="setLaunchMode('HOSTNAME')" id="modeBtn-HOSTNAME" class="launch-mode-btn px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
-              <span>💻</span><span class="hidden md:inline">drug-330</span>
+            <button onclick="setLaunchMode('HOSTNAME')" id="modeBtn-HOSTNAME" class="launch-mode-btn px-2 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1">
+              <span>💻</span><span class="hidden md:inline">Host</span>
             </button>
           </div>
 
-          <!-- View Toggle (Launchpad Icons vs Detailed Cards) -->
+          <!-- View Toggle -->
           <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10">
-            <button onclick="setViewMode('LAUNCHPAD')" id="viewBtn-LAUNCHPAD" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white transition flex items-center gap-1" title="มุมมองไอคอน Launchpad">
+            <button onclick="setViewMode('LAUNCHPAD')" id="viewBtn-LAUNCHPAD" class="px-2 py-1 rounded-lg text-xs font-medium bg-indigo-600 text-white transition flex items-center gap-1" title="มุมมองไอคอน Launchpad (ลากสลับตำแหน่งได้)">
               <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">Icon Grid</span>
+              <span class="hidden sm:inline">Icons</span>
             </button>
-            <button onclick="setViewMode('CARDS')" id="viewBtn-CARDS" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1" title="มุมมองการ์ดแสดงรายละเอียดครบ">
+            <button onclick="setViewMode('CARDS')" id="viewBtn-CARDS" class="px-2 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition flex items-center gap-1" title="มุมมองการ์ดละเอียด">
               <i data-lucide="stretch-horizontal" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">Detailed</span>
+              <span class="hidden sm:inline">Cards</span>
             </button>
           </div>
 
-          <!-- Ping / Health Check Button -->
-          <button onclick="runLiveHealthCheck()" id="pingBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-white/10 text-xs font-medium text-emerald-300 transition" title="ตรวจสอบสถานะออนไลน์ทุกพอร์ตและ Cloud">
-            <i data-lucide="activity" class="w-4 h-4" id="pingIcon"></i>
-            <span class="hidden xl:inline" id="pingBtnText">เช็คสถานะ</span>
+          <!-- Live Health Ping -->
+          <button onclick="runLiveHealthCheck()" id="pingBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-white/10 text-xs font-medium text-emerald-300 transition cursor-pointer" title="ตรวจสอบสถานะออนไลน์ทุกพอร์ตและ Cloud">
+            <i data-lucide="activity" class="w-3.5 h-3.5" id="pingIcon"></i>
+            <span class="hidden xl:inline" id="pingBtnText">Ping</span>
           </button>
 
-          <!-- Scan Another PC Modal Trigger -->
-          <button onclick="openScannerModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-xs font-semibold text-cyan-300 transition cursor-pointer" title="รวบรวมโปรเจกต์จากเครื่องอื่นเข้ามาใน Portal นี้">
-            <i data-lucide="radar" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">ดึงจากเครื่องอื่น</span>
+          <!-- Prompt Studio Button (For Antigravity on other PCs) -->
+          <button onclick="openPromptStudioModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/30 text-xs font-semibold text-purple-200 transition cursor-pointer" title="คัดลอก Prompt สำหรับนำไปวางใน Antigravity เครื่องอื่นเพื่อสร้าง Icon และส่งเข้ามารวม">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-300"></i>
+            <span>Prompt เครื่องอื่น</span>
+          </button>
+
+          <!-- Auto-Scanner Modal Trigger -->
+          <button onclick="openScannerModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-xs font-semibold text-cyan-300 transition cursor-pointer" title="ดาวน์โหลดสคริปต์สแกนเครื่องอื่น">
+            <i data-lucide="radar" class="w-3.5 h-3.5"></i>
+            <span class="hidden md:inline">สแกนเครื่อง</span>
           </button>
 
           <!-- Add New App Button -->
-          <button onclick="openAppModal()" class="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition cursor-pointer">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i>
-            <span>เพิ่มโปรเจกต์ใหม่</span>
+          <button onclick="openAppModal()" class="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition cursor-pointer">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>เพิ่มแอป</span>
           </button>
         </div>
 
@@ -203,52 +230,52 @@
   </header>
 
   <!-- Main Workspace -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-7">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-6">
 
-    <!-- Status Summary & Environment Filter Bar -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel rounded-2xl p-3.5">
-      <!-- Environment & Category Filter Pills -->
+    <!-- Filter & Machine Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 glass-panel rounded-2xl p-3">
+      <!-- Category & Environment Pills -->
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" id="filterTabs">
-        <button onclick="setFilter('ALL')" data-filter="ALL" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow transition whitespace-nowrap">
+        <button onclick="setFilter('ALL')" data-filter="ALL" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow transition whitespace-nowrap">
           🌟 ทั้งหมด (<span id="count-ALL">0</span>)
         </button>
-        <button onclick="setFilter('PINNED')" data-filter="PINNED" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
-          📌 ปักหมุดด่วน (<span id="count-PINNED">0</span>)
+        <button onclick="setFilter('PINNED')" data-filter="PINNED" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          📌 ปักหมุด (<span id="count-PINNED">0</span>)
         </button>
-        <button onclick="setFilter('VERCEL')" data-filter="VERCEL" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+        <button onclick="setFilter('VERCEL')" data-filter="VERCEL" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
           ☁️ Cloud / Vercel (<span id="count-VERCEL">0</span>)
         </button>
-        <button onclick="setFilter('INTRANET')" data-filter="INTRANET" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+        <button onclick="setFilter('INTRANET')" data-filter="INTRANET" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
           🏥 Intranet LAN (<span id="count-INTRANET">0</span>)
         </button>
-        <button onclick="setFilter('PHARMACY')" data-filter="PHARMACY" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
-          💊 คลังยา & บริบาลคลินิก
+        <button onclick="setFilter('PHARMACY')" data-filter="PHARMACY" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          💊 คลังยา & คลินิก
         </button>
-        <button onclick="setFilter('ADMIN_AI')" data-filter="ADMIN_AI" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
-          🤖 บริหารจัดการ & AI
+        <button onclick="setFilter('ADMIN_AI')" data-filter="ADMIN_AI" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 transition whitespace-nowrap">
+          🤖 บริหาร & AI
         </button>
       </div>
 
-      <!-- Network Info & Quick Tools -->
-      <div class="flex items-center justify-between md:justify-end gap-3 text-xs border-t md:border-t-0 border-white/10 pt-2.5 md:pt-0">
-        <div class="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
-          <span class="px-2 py-1 rounded-lg bg-slate-900 border border-white/10 text-slate-300" id="lanIpDisplay">
-            LAN: 192.168.3.186
-          </span>
-          <span class="px-2 py-1 rounded-lg bg-slate-900 border border-white/10 text-emerald-400" id="onlineSummaryBadge">
-            กำลังตรวจพอร์ต...
-          </span>
-        </div>
+      <!-- Machine Selector & Backup Tools -->
+      <div class="flex items-center justify-between md:justify-end gap-2 text-xs border-t md:border-t-0 border-white/10 pt-2 md:pt-0">
+        <!-- Dynamic Host/Machine Filter -->
+        <select id="hostFilterSelect" onchange="setHostFilter(this.value)"
+          class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-[11px] font-mono text-indigo-200 focus:outline-none">
+          <option value="ALL">🖥️ ทุกเครื่องแม่ข่าย (All Hosts)</option>
+        </select>
 
-        <div class="flex items-center gap-1.5">
-          <button onclick="syncMachineProjects()" class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition" title="ดึงรายการโปรเจกต์หลักในเครื่อง DRUG-330 กลับมา">
+        <span class="px-2 py-1 rounded-lg bg-slate-900 border border-white/10 font-mono text-[11px] text-emerald-400" id="onlineSummaryBadge">
+          ONLINE: --
+        </span>
+
+        <div class="flex items-center gap-1">
+          <button onclick="syncMachineProjects()" class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition" title="ซิงค์โปรเจกต์เริ่มต้นจาก DRUG-330">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">ซิงค์โปรเจกต์ในเครื่อง</span>
           </button>
-          <button onclick="exportAppsJson()" class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition" title="ส่งออกไฟล์สำรองข้อมูล JSON">
+          <button onclick="exportAppsJson()" class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition" title="Export JSON Backup">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
           </button>
-          <label class="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 text-[11px] flex items-center gap-1 transition cursor-pointer" title="นำเข้าไฟล์ JSON">
+          <label class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition cursor-pointer" title="Import JSON">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
             <input type="file" accept=".json" class="hidden" onchange="importAppsJson(event)" />
           </label>
@@ -256,37 +283,33 @@
       </div>
     </div>
 
-    <!-- Error / Disconnected Banner (Zero Mockup Policy Honesty) -->
+    <!-- Error Banner -->
     <div id="dbErrorBanner" class="hidden rounded-2xl bg-rose-950/70 border border-rose-500/40 p-4 text-rose-200 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <i data-lucide="alert-Octagon" class="w-6 h-6 text-rose-400 shrink-0"></i>
+        <i data-lucide="alert-octagon" class="w-6 h-6 text-rose-400 shrink-0"></i>
         <div>
           <h3 class="text-sm font-bold">ไม่สามารถเชื่อมต่อฐานข้อมูลได้ (Database Disconnected)</h3>
           <p class="text-xs text-rose-300 mt-0.5" id="dbErrorText"></p>
         </div>
       </div>
       <button onclick="loadApps()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">
-        ลองเชื่อมต่อใหม่
+        ลองใหม่
       </button>
     </div>
 
-    <!-- Empty State (0 Records - Zero Mockup Policy) -->
+    <!-- Empty State (Zero Mockup Policy) -->
     <div id="emptyStateContainer" class="hidden glass-panel rounded-3xl p-12 text-center max-w-lg mx-auto my-8">
       <div class="w-16 h-16 rounded-2xl bg-slate-800/90 border border-white/10 flex items-center justify-center mx-auto text-3xl mb-4">
         📭
       </div>
       <h2 class="text-lg font-bold text-white">ไม่มีรายการแอปพลิเคชัน (0 รายการ)</h2>
       <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
-        ไม่พบข้อมูลโปรเจกต์ที่ตรงกับเงื่อนไข หรือยังไม่มีรายการในฐานข้อมูลจริง (ระบบปฏิบัติตามกฎ Zero Mockup Policy ไม่สร้างข้อมูลจำลอง)
+        ไม่พบข้อมูลโปรเจกต์ที่ตรงกับตัวกรอง หรือยังไม่มีรายการในฐานข้อมูลจริง (Zero Mockup Policy)
       </p>
       <div class="flex items-center justify-center gap-3 mt-6">
-        <button onclick="openAppModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-indigo-600/30">
+        <button onclick="openAppModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5">
           <i data-lucide="plus" class="w-4 h-4"></i>
           <span>เพิ่มโปรเจกต์ใหม่</span>
-        </button>
-        <button onclick="syncMachineProjects()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5">
-          <i data-lucide="cpu" class="w-4 h-4"></i>
-          <span>ดึงโปรเจกต์จริงในเครื่อง DRUG-330</span>
         </button>
       </div>
     </div>
@@ -296,34 +319,137 @@
 
   </main>
 
+  <!-- Interactive OS Dock Bar at Bottom -->
+  <div class="sticky bottom-3 z-20 px-4 pointer-events-none hidden sm:flex justify-center">
+    <div id="osBottomDock" class="pointer-events-auto glass-panel bg-slate-950/80 border border-white/15 rounded-2xl px-3 py-2 shadow-2xl flex items-center gap-2.5 max-w-full overflow-x-auto">
+      <!-- Populated dynamically with pinned apps + quick tools -->
+    </div>
+  </div>
+
   <!-- Footer -->
-  <footer class="border-t border-white/10 py-4 px-6 text-center text-xs text-slate-500 glass-panel mt-12">
+  <footer class="border-t border-white/10 py-3.5 px-6 text-center text-xs text-slate-500 glass-panel mt-6">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <div>
-        <span class="font-semibold text-slate-400">ONE FOR ALL (little-ong)</span> — Unified Cloud & Intranet Application Launchpad
+        <span class="font-semibold text-slate-400">ONE FOR ALL (little-ong)</span> — Interactive Cloud & Intranet Launchpad (ลากวางไอคอนเพื่อจัดเรียงลำดับได้ทันที)
       </div>
       <div class="flex items-center gap-3 font-mono text-[11px]">
-        <span>Zero Mockup Verified</span>
+        <span id="lanIpDisplay">LAN: 192.168.3.186</span>
         <span>•</span>
-        <span>Real DB Sync (Turso Cloud + SQLite)</span>
+        <span>Turso Cloud + SQLite Synced</span>
       </div>
     </div>
   </footer>
 
-  <!-- Toast Notification -->
+  <!-- Toast Container -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- Add / Edit Application Modal -->
+  <!-- 1. Interactive Spotlight Command Palette Modal (Ctrl+K) -->
+  <div id="spotlightModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/75 backdrop-blur-md pt-20 p-4" onclick="if(event.target===this)closeSpotlight()">
+    <div class="glass-panel bg-slate-900/95 border border-indigo-500/40 rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl">
+      <div class="flex items-center px-4 py-3.5 border-b border-white/10 gap-3">
+        <i data-lucide="command" class="w-5 h-5 text-indigo-400"></i>
+        <input id="spotlightInput" type="text" placeholder="พิมพ์ชื่อแอป, พอร์ต (8050, 8443), หรือชื่อเครื่อง แล้วกด Enter เพื่อเปิดทันที..."
+          oninput="renderSpotlightList(this.value)"
+          onkeydown="handleSpotlightKey(event)"
+          class="w-full bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none" />
+        <kbd class="px-2 py-0.5 text-[10px] font-mono bg-slate-800 text-slate-400 rounded border border-white/10">ESC</kbd>
+      </div>
+      <div id="spotlightResults" class="max-h-80 overflow-y-auto divide-y divide-white/5 p-2"></div>
+    </div>
+  </div>
+
+  <!-- 2. Interactive QR Code & Mobile/iPad Bridge Modal -->
+  <div id="qrModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4" onclick="if(event.target===this)closeQrModal()">
+    <div class="glass-panel bg-slate-900/95 border border-white/15 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 id="qrModalTitle" class="text-sm font-bold text-white truncate">สแกน QR เข้าใช้งานแอป</h3>
+        <button onclick="closeQrModal()" class="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="bg-white p-4 rounded-2xl inline-block mx-auto shadow-inner">
+        <img id="qrImage" src="" alt="QR Code" class="w-48 h-48 mx-auto" />
+      </div>
+      <p id="qrUrlText" class="mt-3 text-[11px] font-mono text-indigo-300 break-all bg-slate-950/80 p-2 rounded-xl border border-white/10"></p>
+      <div id="qrRouteButtons" class="mt-3 flex flex-wrap justify-center gap-1.5"></div>
+    </div>
+  </div>
+
+  <!-- 3. Interactive Live Preview Window Modal -->
+  <div id="previewModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-6" onclick="if(event.target===this)closePreviewModal()">
+    <div class="glass-panel bg-slate-950 border border-white/15 rounded-3xl w-full max-w-6xl h-[86vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900 border-b border-white/10">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="flex items-center gap-1.5">
+            <button onclick="closePreviewModal()" class="w-3 h-3 rounded-full bg-rose-500 hover:opacity-80" title="ปิดหน้าต่าง"></button>
+            <a id="previewExternalBtn" href="#" target="_blank" class="w-3 h-3 rounded-full bg-emerald-500 hover:opacity-80" title="เปิดแท็บใหม่"></a>
+          </div>
+          <span id="previewTitle" class="text-xs font-bold text-white truncate ml-2"></span>
+          <span id="previewUrlBadge" class="text-[11px] font-mono text-indigo-300 bg-slate-950 px-2 py-0.5 rounded border border-white/10 truncate hidden sm:inline"></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="previewOpenNewTab" href="#" target="_blank" rel="noopener" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1">
+            <span>เปิดเต็มจอในแท็บใหม่</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+          <button onclick="closePreviewModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <iframe id="previewIframe" src="about:blank" class="flex-1 w-full bg-slate-950 border-0"></iframe>
+    </div>
+  </div>
+
+  <!-- 4. Context-Aware Antigravity Prompt Studio Modal -->
+  <div id="promptStudioModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this)closePromptStudioModal()">
+    <div class="glass-panel bg-slate-900/95 border border-purple-500/35 rounded-3xl max-w-3xl w-full p-6 sm:p-7 shadow-2xl my-8">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 via-indigo-500 to-pink-500 flex items-center justify-center text-2xl shadow-lg">
+            ✨
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-white">Antigravity Prompt Studio (สร้าง Icon App & Interactive Sync)</h2>
+            <p class="text-xs text-slate-400">ก๊อปปี้ Prompt นี้ไปวางใน Antigravity เครื่องอื่น เพื่อให้วิเคราะห์บริบทโปรเจกต์ ออกแบบ Icon SVG และส่งมารวมที่หน้านี้</p>
+          </div>
+        </div>
+        <button onclick="closePromptStudioModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-purple-300">📋 Prompt สำเร็จรูป (วิเคราะห์บริบท + สร้าง Custom SVG App Icon + ทำให้ Web App เป็น Interactive + Sync ขึ้น Cloud)</span>
+          <button onclick="copyPromptText()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>คัดลอก Prompt ทั้งหมด</span>
+          </button>
+        </div>
+        <textarea id="masterAntigravityPrompt" readonly rows="14"
+          class="w-full p-3.5 rounded-2xl bg-slate-950 border border-white/10 text-xs font-mono text-slate-200 leading-relaxed focus:outline-none"></textarea>
+      </div>
+
+      <div class="flex justify-end pt-4 mt-4 border-t border-white/10">
+        <button onclick="closePromptStudioModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Add / Edit Application Modal (with Custom Icon Preset Picker) -->
   <div id="appModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
     <div class="glass-panel bg-slate-900/95 border border-white/15 rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl my-8">
       <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
         <div class="flex items-center gap-3">
-          <div id="modalPreviewSquircle" class="w-12 h-12 app-squircle bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl">
+          <div id="modalPreviewSquircle" class="w-14 h-14 app-squircle bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-2xl">
             🚀
           </div>
           <div>
             <h2 id="modalTitle" class="text-base sm:text-lg font-bold text-white">เพิ่มโปรเจกต์ / แอปพลิเคชันใหม่</h2>
-            <p class="text-xs text-slate-400">กรอกลิงก์ Vercel Cloud หรือ IP:Port ภายในโรงพยาบาล</p>
+            <p class="text-xs text-slate-400">ปรับแต่งไอคอน, ลิงก์ Vercel Cloud และ IP:Port ภายในโรงพยาบาล</p>
           </div>
         </div>
         <button onclick="closeAppModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
@@ -342,7 +468,7 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">คำโปรยสั้นๆ (Subtitle)</label>
-            <input id="formSubtitle" type="text" placeholder="เช่น ระบบพยากรณ์คลังยา Port 8050"
+            <input id="formSubtitle" type="text" placeholder="เช่น เครื่อง DRUG-330 (192.168.3.186:8050)"
               class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none" />
           </div>
         </div>
@@ -352,7 +478,7 @@
             <label class="block text-xs font-semibold text-slate-300 mb-1">ประเภทการเชื่อมต่อ *</label>
             <select id="formEnvType" onchange="autoBuildFormUrl()"
               class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-sm text-white focus:border-indigo-500 focus:outline-none">
-              <option value="HYBRID">⚡ HYBRID (มีทั้ง Intranet & Vercel)</option>
+              <option value="HYBRID">⚡ HYBRID (Intranet + Vercel)</option>
               <option value="VERCEL">☁️ VERCEL / CLOUD</option>
               <option value="INTRANET">🏥 INTRANET (IP:Port ภายใน)</option>
             </select>
@@ -370,19 +496,17 @@
           <div class="flex items-end pb-1">
             <label class="flex items-center gap-2.5 cursor-pointer select-none px-3.5 py-2 rounded-xl bg-slate-950/60 border border-white/10 w-full">
               <input id="formPinned" type="checkbox" class="w-4 h-4 accent-indigo-500 rounded" />
-              <span class="text-xs font-semibold text-amber-300">📌 ปักหมุดไว้แถวบนสุด</span>
+              <span class="text-xs font-semibold text-amber-300">📌 ปักหมุดแถวบนสุด & Dock</span>
             </label>
           </div>
         </div>
 
         <!-- Smart IP + Port Builder -->
         <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-white/10 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-              <i data-lucide="link" class="w-3.5 h-3.5"></i>
-              ตั้งค่า URL / IP Address / Port (กรอกแค่ IP กับ Port ระบบสร้างลิงก์ให้อัตโนมัติ)
-            </span>
-          </div>
+          <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+            <i data-lucide="link" class="w-3.5 h-3.5"></i>
+            ตั้งค่า URL / IP Address / Port
+          </span>
 
           <div class="grid grid-cols-12 gap-2.5">
             <div class="col-span-3 sm:col-span-2">
@@ -394,17 +518,17 @@
               </select>
             </div>
             <div class="col-span-9 sm:col-span-5">
-              <label class="block text-[11px] text-slate-400 mb-1">IP หรือ Domain (เช่น 192.168.3.186)</label>
+              <label class="block text-[11px] text-slate-400 mb-1">IP หรือ Domain</label>
               <input id="formHost" type="text" oninput="autoBuildFormUrl()" placeholder="192.168.3.186 หรือ app.vercel.app"
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
             </div>
             <div class="col-span-5 sm:col-span-2">
-              <label class="block text-[11px] text-slate-400 mb-1">Port (ถ้ามี)</label>
+              <label class="block text-[11px] text-slate-400 mb-1">Port</label>
               <input id="formPort" type="text" oninput="autoBuildFormUrl()" placeholder="8050"
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-emerald-300" />
             </div>
             <div class="col-span-7 sm:col-span-3">
-              <label class="block text-[11px] text-slate-400 mb-1">Path ต่อท้าย</label>
+              <label class="block text-[11px] text-slate-400 mb-1">Path</label>
               <input id="formPath" type="text" oninput="autoBuildFormUrl()" placeholder="/pluto"
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
             </div>
@@ -417,7 +541,7 @@
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
             </div>
             <div>
-              <label class="block text-[11px] text-sky-300 mb-1">☁️ ลิงก์ Cloud / Vercel (ถ้ามี)</label>
+              <label class="block text-[11px] text-sky-300 mb-1">☁️ ลิงก์ Cloud / Vercel</label>
               <input id="formCloudUrl" type="text" placeholder="https://my-project.vercel.app"
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
             </div>
@@ -430,27 +554,45 @@
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-indigo-500/40 text-xs font-mono text-indigo-200" />
             </div>
             <div>
-              <label class="block text-[11px] text-slate-400 mb-1">🔒 ลิงก์สำรอง / HTTPS PWA / Port สำรอง</label>
+              <label class="block text-[11px] text-slate-400 mb-1">🔒 ลิงก์สำรอง / HTTPS PWA</label>
               <input id="formHttpsUrl" type="text" placeholder="https://192.168.3.186:8443/medusa"
                 class="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white" />
             </div>
           </div>
         </div>
 
-        <!-- Emoji & Color Gradient Picker -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Icon Vector Preset + Emoji + Color Gradient -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">เลือกไอคอน Emoji ประจำแอป</label>
-            <div class="flex items-center gap-2">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">รูปแบบ Vector Icon</label>
+            <select id="formIconName" onchange="updateModalPreview()"
+              class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 text-xs text-white">
+              <option value="auto">✨ Vector อัตโนมัติตามบริบท</option>
+              <option value="orbit">🪐 ดาวเคราะห์ / คลังยา PLUTO</option>
+              <option value="shield-check">🌿 ตู้เซฟนิรภัย MORPHEUS</option>
+              <option value="stethoscope">🐍 งูการแพทย์ & CDSS MEDUSA</option>
+              <option value="microscope">🦠 จุลชีววิทยา & Antibiogram</option>
+              <option value="repeat">🤝 เครือข่ายยืม-คืนยา</option>
+              <option value="activity">⚠️ คัดกรองความเสี่ยง Fall Risk</option>
+              <option value="building-2">🏥 ศูนย์ข้อมูลโรงพยาบาล Chaba</option>
+              <option value="pill">💊 จัดจ่ายยา & เรียกคิว</option>
+              <option value="radar">🛰️ เรดาร์เฝ้าระวังเซิร์ฟเวอร์</option>
+              <option value="globe">🌐 เว็บพอร์ทัลองค์กร</option>
+              <option value="cpu">🤖 ชิปประมวลผล AI / LLM</option>
+              <option value="sparkles">🎰 วิเคราะห์สถิติพยากรณ์</option>
+              <option value="emoji_only">😀 แสดงเฉพาะตัว Emoji</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Emoji ประจำแอป</label>
+            <div class="flex items-center gap-1.5">
               <input id="formEmoji" type="text" value="🚀" oninput="updateModalPreview()"
-                class="w-14 text-center py-1.5 rounded-xl bg-slate-950 border border-white/15 text-xl" />
-              <div class="flex flex-wrap gap-1 flex-1" id="emojiQuickList">
-                <!-- Populated by JS -->
-              </div>
+                class="w-12 text-center py-1.5 rounded-xl bg-slate-950 border border-white/15 text-lg" />
+              <div class="flex flex-wrap gap-1 flex-1" id="emojiQuickList"></div>
             </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">โทนสีไอคอน (Gradient Theme)</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">โทนสีไอคอน (Gradient)</label>
             <select id="formColor" onchange="updateModalPreview()"
               class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 text-xs text-white">
               <option value="from-indigo-500 via-purple-500 to-pink-500">🌌 Cosmic Indigo & Pink</option>
@@ -468,7 +610,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">โฟลเดอร์โปรเจกต์ในเครื่อง (ถ้ามี)</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">โฟลเดอร์ / เครื่องต้นทาง</label>
             <input id="formLocalFolder" type="text" placeholder="D:\TAIONG\forcast"
               class="w-full px-3.5 py-2 rounded-xl bg-slate-950/90 border border-white/10 text-xs font-mono text-slate-300" />
           </div>
@@ -499,8 +641,8 @@
     </div>
   </div>
 
-  <!-- Cross-Machine Auto-Scanner Modal -->
-  <div id="scannerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+  <!-- 6. Cross-Machine Auto-Scanner Modal -->
+  <div id="scannerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto" onclick="if(event.target===this)closeScannerModal()">
     <div class="glass-panel bg-slate-900/95 border border-cyan-500/30 rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl my-8">
       <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
         <div class="flex items-center gap-3">
@@ -508,8 +650,8 @@
             📡
           </div>
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-white">รวบรวมโปรเจกต์จากเครื่องอื่นเข้าสู่ ONE FOR ALL</h2>
-            <p class="text-xs text-slate-400">สแกนพอร์ตเว็บ, IP Address และโปรเจกต์ Vercel จากเครื่องไหนก็ได้ขึ้นมารวมที่หน้านี้</p>
+            <h2 class="text-base sm:text-lg font-bold text-white">สแกนโปรเจกต์จากเครื่องอื่นอัตโนมัติ</h2>
+            <p class="text-xs text-slate-400">ดึงพอร์ตเว็บ, IP Address และโปรเจกต์ Vercel จากเครื่องอื่นมารวมที่หน้านี้</p>
           </div>
         </div>
         <button onclick="closeScannerModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
@@ -518,13 +660,10 @@
       </div>
 
       <div class="space-y-4 text-xs text-slate-300">
-        <!-- Method 1: 1-Click .BAT Download -->
         <div class="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/25 space-y-2.5">
-          <div class="font-bold text-cyan-300 text-sm flex items-center gap-2">
-            <span>วิธีที่ 1: เปิดหน้าเว็บนี้ที่เครื่องอื่น แล้วกดดาวน์โหลดตัวสแกน (.bat)</span>
-          </div>
+          <div class="font-bold text-cyan-300 text-sm">วิธีที่ 1: ดาวน์โหลดไฟล์ .BAT ไปดับเบิลคลิกที่เครื่องอื่น</div>
           <p class="text-slate-400 leading-relaxed">
-            เมื่อไปที่เครื่องคอมพิวเตอร์อีกเครื่อง ให้เข้าเว็บ <span class="text-white font-mono">https://one-for-all-little-ong.vercel.app</span> แล้วกดปุ่มด้านล่างเพื่อดาวน์โหลดไฟล์ <b>Scan_This_PC_To_OneForAll.bat</b> ไปดับเบิลคลิกได้เลย ระบบจะค้นหา IP, พอร์ตเว็บ และโปรเจกต์ในเครื่องนั้นแล้วส่งขึ้นมารวมบน Cloud อัตโนมัติ!
+            เปิดหน้าเว็บนี้ที่คอมพิวเตอร์อีกเครื่อง แล้วกดปุ่มด้านล่างเพื่อดาวน์โหลดไฟล์ <b>Scan_This_PC_To_OneForAll.bat</b> ไปรันได้เลย
           </p>
           <div class="pt-1">
             <a href="/api/scanner-script.bat" download="Scan_This_PC_To_OneForAll.bat"
@@ -535,12 +674,8 @@
           </div>
         </div>
 
-        <!-- Method 2: 1-Line PowerShell Command -->
         <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-2">
-          <div class="font-bold text-indigo-300 text-sm">
-            วิธีที่ 2: รันคำสั่งบรรทัดเดียวใน PowerShell ที่เครื่องอื่น
-          </div>
-          <p class="text-slate-400">คัดลอกคำสั่งนี้ไปวางใน PowerShell ของเครื่องอื่นแล้วกด Enter ได้ทันที:</p>
+          <div class="font-bold text-indigo-300 text-sm">วิธีที่ 2: รันคำสั่งบรรทัดเดียวใน PowerShell ที่เครื่องอื่น</div>
           <div class="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-white/10 font-mono text-[11px] text-emerald-300">
             <code class="flex-1 overflow-x-auto whitespace-nowrap" id="psOneLiner">irm https://one-for-all-little-ong.vercel.app/api/scanner-script.py | python -</code>
             <button onclick="copyUrl(document.getElementById('psOneLiner').textContent, 'คำสั่ง PowerShell')"

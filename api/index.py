@@ -196,6 +196,29 @@ async def api_delete_app(app_id: str):
         raise HTTPException(status_code=500, detail=f"ลบข้อมูลไม่สำเร็จ: {e}")
 
 
+@app.post("/api/apps/reorder")
+async def api_reorder_apps(request: Request):
+    try:
+        body = await request.json()
+        ordered_ids = body.get("ordered_ids", [])
+    except Exception:
+        raise HTTPException(status_code=400, detail="รูปแบบ JSON ไม่ถูกต้อง")
+
+    if not isinstance(ordered_ids, list):
+        raise HTTPException(status_code=400, detail="ordered_ids ต้องเป็น Array")
+
+    rows, _ = query_all_apps()
+    row_map = {r["id"]: r for r in rows}
+    updated = 0
+    for idx, app_id in enumerate(ordered_ids, start=1):
+        if app_id in row_map:
+            rec = dict(row_map[app_id])
+            rec["sort_order"] = idx
+            upsert_app_record(rec, sync_cloud=True)
+            updated += 1
+    return {"status": "ok", "updated": updated}
+
+
 @app.post("/api/apps/sync-machine")
 async def api_sync_machine_projects():
     try:
