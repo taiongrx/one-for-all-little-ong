@@ -24,17 +24,18 @@ let spotlightMatches = [];
 
 const QUICK_EMOJIS = ['🪐', '🌿', '🐍', '🦠', '🤝', '⚠️', '🏥', '💊', '🛰️', '🌐', '🤖', '🎰', '🚀', '📊', '🧬', '🛡️'];
 
-const MASTER_ANTIGRAVITY_PROMPT = `ช่วยวิเคราะห์บริบทของโปรเจกต์ทั้งหมดในเครื่องนี้ แล้วดำเนินการ 3 ส่วนนี้แบบครบวงจร (Zero Mockup Policy):
+const MASTER_ANTIGRAVITY_PROMPT = `ช่วยวิเคราะห์บริบทของโปรเจกต์ทั้งหมดในเครื่องนี้ แล้วดำเนินการ 3 ส่วนนี้แบบครบวงจร (ปฏิบัติตามกฎ Zero Mockup Policy ห้ามใช้ข้อมูลจำลองเด็ดขาด):
 
-ส่วนที่ 1: วิเคราะห์บริบท & ออกแบบ Custom App Icon ประจำแต่ละโปรเจกต์
-- สแกนหาโปรเจกต์ทั้งหมดในเครื่องนี้ (ทั้งที่รันอยู่บน Local/Intranet Port, FastAPI, Streamlit, React/Vite, Next.js, Docker และโปรเจกต์ที่ผูกกับ Vercel / Firebase)
-- วิเคราะห์บริบทจริงของแต่ละโปรเจกต์ (เช่น ระบบคลังยา, ระบบบริบาลเภสัชกรรม CDSS, ระบบห้องแล็บ/เชื้อดื้อยา, ระบบเวชระเบียน, ระบบคิว หรือ AI)
-- สร้างไฟล์ Custom SVG App Icon สวยๆ (พร้อมตั้งค่า <link rel="icon"> และ Web App Manifest / Apple Touch Icon) ให้เหมาะกับบริบทของแต่ละเว็บแอปในเครื่องนี้
+ส่วนที่ 1: ดึง Icon จริงของแต่ละ App (หรือสร้าง Icon ประจำ App หากยังไม่มี)
+1. สแกนหาโปรเจกต์เว็บแอปพลิเคชันทั้งหมดในเครื่องนี้ (ทั้งที่รันอยู่บน Local/Intranet Port, FastAPI, Streamlit, React/Vite, Next.js, Docker และโปรเจกต์ที่ผูกกับ Vercel / Firebase)
+2. ค้นหาไฟล์ Icon / Logo จริงของแต่ละโปรเจกต์ในโฟลเดอร์นั้นๆ (เช่น icon-192.png, logo192.png, apple-touch-icon.png, logo.png, favicon.png, favicon.svg, icon.svg)
+   - หากโปรเจกต์ไหนมีไฟล์ Icon จริงอยู่แล้ว ให้ย่อขนาดภาพเป็นประมาณ 128x128 หรือ 192x192 แล้วแปลงเป็น Base64 Data URI (เช่น "data:image/png;base64,..." หรือ "data:image/svg+xml;base64,...") เพื่อส่งไปแสดงผลเป็น Icon จริงของแอปนั้นบน Cloud Portal
+   - หากโปรเจกต์ไหนยังไม่มีไฟล์ Icon ของตัวเองเลย ให้วิเคราะห์บริบทของโปรเจกต์นั้นแล้วสร้างไฟล์ Custom SVG App Icon สวยๆ บันทึกไว้ในโปรเจกต์นั้น พร้อมแปลงเป็น "data:image/svg+xml;base64,..."
 
 ส่วนที่ 2: อัปเกรด Web App ในเครื่องนี้ให้เป็น Interactive
 - ตรวจสอบ UI ของโปรเจกต์หลักในเครื่องนี้ เพิ่มความสามารถแบบ Interactive ที่ใช้งานได้จริง (เช่น Real-time Search/Filter, Interactive Status Indicator, Keyboard Shortcuts, Smooth Micro-animations และ Responsive Touch UI สำหรับ PC/iPad/Mobile) โดยใช้ข้อมูลจริงจากระบบ 100%
 
-ส่วนที่ 3: ส่งข้อมูลโปรเจกต์และ Icon ขึ้นไปรวมที่ศูนย์กลาง ONE FOR ALL Cloud Portal อัตโนมัติ
+ส่วนที่ 3: ส่งข้อมูลโปรเจกต์พร้อม Icon จริงของแต่ละ App ขึ้นไปรวมที่ ONE FOR ALL Cloud Portal อัตโนมัติ
 - ตรวจสอบชื่อเครื่อง (Hostname) และ IP Address ในวง LAN ปัจจุบันของเครื่องนี้
 - ส่ง HTTP POST ไปที่: https://one-for-all-little-ong.vercel.app/api/apps/import
   Headers: {"Content-Type": "application/json"}
@@ -56,13 +57,44 @@ const MASTER_ANTIGRAVITY_PROMPT = `ช่วยวิเคราะห์บร
     "https_url": "<ลิงก์ HTTPS / PWA หรือพอร์ตสำรองถ้ามี>",
     "cloud_url": "<https://*.vercel.app หรือ .web.app ถ้ามี>",
     "local_folder": "<[ชื่อเครื่อง] Path โฟลเดอร์ในเครื่องนี้>",
-    "icon_name": "<เลือก preset: orbit | shield-check | stethoscope | microscope | repeat | activity | building-2 | pill | radar | globe | cpu | sparkles>",
+    "icon_name": "<ใส่ Base64 Data URI ของไฟล์ Icon จริงของแอปนั้น เช่น data:image/png;base64,... หรือ data:image/svg+xml;base64,... หรือ URL ของรูปไอคอนจริง>",
     "icon_emoji": "<Emoji ประจำโปรเจกต์>",
-    "icon_color": "<เลือก Gradient: from-indigo-500 via-purple-500 to-pink-500 | from-emerald-500 via-teal-500 to-cyan-600 | from-rose-500 via-red-500 to-orange-500 | from-cyan-500 via-blue-500 to-indigo-600 | from-amber-500 via-orange-500 to-red-500 | from-blue-600 via-indigo-600 to-violet-600 | from-teal-500 via-emerald-500 to-green-600 | from-fuchsia-600 via-purple-600 to-indigo-700>",
+    "icon_color": "<เลือก Gradient พื้นหลัง: from-indigo-500 via-purple-500 to-pink-500 | from-emerald-500 via-teal-500 to-cyan-600 | from-rose-500 via-red-500 to-orange-500 | from-cyan-500 via-blue-500 to-indigo-600 | from-amber-500 via-orange-500 to-red-500 | from-blue-600 via-indigo-600 to-violet-600>",
     "is_pinned": 1,
     "sort_order": 15
   }
 - เมื่อยิง API เสร็จแล้ว ให้ตรวจสอบจาก https://one-for-all-little-ong.vercel.app/api/apps และสรุปรายการโปรเจกต์ที่ซิงค์สำเร็จให้ดูด้วย`;
+
+const REAL_APP_ICON_MAP = {
+  'pluto-platform': '/static/icons/pluto.png',
+  'morpheus-vault': '/static/icons/morpheus.png',
+  'medusa-ipd-http': '/static/icons/medusa.png',
+  'antibiogram-agis': '/static/icons/agis.png',
+  'drug-borrow-saiburi': '/static/icons/drug-borrow.png',
+  'fall-risk-platform': '/static/icons/fall-risk.jpg',
+  'chaba-center': '/static/icons/chaba.png',
+  'dispensing-x': '/static/icons/dispensingx.svg',
+  'sentinel-watchdog': '/static/icons/sentinel.svg',
+  'scph-portal': '/static/icons/scph-portal.png',
+  'ollama-llm': '/static/icons/ollama.png',
+  'thai-lotto-ai': '/static/icons/lotto.jpg',
+};
+
+function resolveAuthenticIconUrl(app) {
+  const iconField = String(app.icon_name || '').trim();
+  if (
+    iconField.startsWith('/') ||
+    iconField.startsWith('http://') ||
+    iconField.startsWith('https://') ||
+    iconField.startsWith('data:image/')
+  ) {
+    return iconField;
+  }
+  if (app.id && REAL_APP_ICON_MAP[app.id]) {
+    return REAL_APP_ICON_MAP[app.id];
+  }
+  return '';
+}
 
 /**
  * Context-Aware Vector SVG Icon Library
@@ -199,8 +231,20 @@ function getBespokeSvgForApp(app) {
 }
 
 function renderIconArtwork(app, isLarge = true) {
-  const svgArt = getBespokeSvgForApp(app);
+  const realIconUrl = resolveAuthenticIconUrl(app);
   const emoji = escapeHtml(app.icon_emoji || '🚀');
+  if (realIconUrl) {
+    return `
+      <img src="${escapeAttr(realIconUrl)}"
+           alt="${escapeAttr(app.name || 'App Icon')}"
+           class="w-full h-full object-cover select-none pointer-events-none"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div style="display:none" class="w-full h-full items-center justify-center">
+        <span class="${isLarge ? 'text-4xl sm:text-5xl' : 'text-2xl'} select-none">${emoji}</span>
+      </div>
+    `;
+  }
+  const svgArt = getBespokeSvgForApp(app);
   if (svgArt) {
     return `
       <div class="relative w-full h-full flex items-center justify-center">
@@ -265,6 +309,22 @@ function selectEmoji(em) {
     input.value = em;
     updateModalPreview();
   }
+}
+
+function handleIconFileUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+    const iconInput = document.getElementById('formIconName');
+    if (iconInput && typeof dataUrl === 'string') {
+      iconInput.value = dataUrl;
+      updateModalPreview();
+      showToast('อัปโหลดรูปไอคอนของแอปสำเร็จ', 'success');
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function updateModalPreview() {
@@ -710,7 +770,7 @@ function renderBottomDock() {
          class="group relative flex flex-col items-center p-1 transition-transform duration-200 hover:-translate-y-2 hover:scale-110"
          title="${escapeAttr(app.name)} (${escapeAttr(targetUrl)})">
         <div class="w-11 h-11 app-squircle bg-gradient-to-br ${escapeAttr(gradient)} flex items-center justify-center text-xl shadow-lg">
-          ${escapeHtml(app.icon_emoji || '🚀')}
+          ${renderIconArtwork(app, false)}
         </div>
         <span class="mt-1 w-1 h-1 rounded-full ${healthMap[app.id]?.online ? 'bg-emerald-400' : 'bg-slate-600'}"></span>
       </a>
@@ -852,7 +912,7 @@ function renderSpotlightList(q) {
          class="flex items-center justify-between p-2.5 rounded-2xl transition ${active ? 'bg-indigo-600/30 border border-indigo-500/40' : 'hover:bg-white/5'}">
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-10 h-10 app-squircle bg-gradient-to-br ${escapeAttr(app.icon_color || 'from-indigo-500 to-purple-600')} flex items-center justify-center text-lg shrink-0">
-            ${escapeHtml(app.icon_emoji || '🚀')}
+            ${renderIconArtwork(app, false)}
           </div>
           <div class="min-w-0">
             <div class="text-xs font-bold text-white truncate">${escapeHtml(app.name)}</div>

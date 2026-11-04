@@ -561,27 +561,34 @@
           </div>
         </div>
 
-        <!-- Icon Vector Preset + Emoji + Color Gradient -->
+        <!-- Icon Image / Upload + Emoji + Color Gradient -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">รูปแบบ Vector Icon</label>
-            <select id="formIconName" onchange="updateModalPreview()"
-              class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 text-xs text-white">
-              <option value="auto">✨ Vector อัตโนมัติตามบริบท</option>
-              <option value="orbit">🪐 ดาวเคราะห์ / คลังยา PLUTO</option>
-              <option value="shield-check">🌿 ตู้เซฟนิรภัย MORPHEUS</option>
-              <option value="stethoscope">🐍 งูการแพทย์ & CDSS MEDUSA</option>
-              <option value="microscope">🦠 จุลชีววิทยา & Antibiogram</option>
-              <option value="repeat">🤝 เครือข่ายยืม-คืนยา</option>
-              <option value="activity">⚠️ คัดกรองความเสี่ยง Fall Risk</option>
-              <option value="building-2">🏥 ศูนย์ข้อมูลโรงพยาบาล Chaba</option>
-              <option value="pill">💊 จัดจ่ายยา & เรียกคิว</option>
-              <option value="radar">🛰️ เรดาร์เฝ้าระวังเซิร์ฟเวอร์</option>
-              <option value="globe">🌐 เว็บพอร์ทัลองค์กร</option>
-              <option value="cpu">🤖 ชิปประมวลผล AI / LLM</option>
-              <option value="sparkles">🎰 วิเคราะห์สถิติพยากรณ์</option>
-              <option value="emoji_only">😀 แสดงเฉพาะตัว Emoji</option>
-            </select>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Icon ของ App (URL หรืออัปโหลดรูปไอคอนจริง)</label>
+            <div class="flex items-center gap-1.5">
+              <input id="formIconName" type="text" list="realIconPresetList" oninput="updateModalPreview()"
+                placeholder="/static/icons/pluto.png หรือ https://..."
+                class="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-white/10 text-xs font-mono text-white" />
+              <label class="px-2.5 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-400/30 text-indigo-200 text-xs cursor-pointer shrink-0" title="อัปโหลดไฟล์รูปไอคอนของแอป (.png, .svg, .jpg, .ico)">
+                📁
+                <input type="file" accept="image/*,.ico,.svg" class="hidden" onchange="handleIconFileUpload(event)" />
+              </label>
+            </div>
+            <datalist id="realIconPresetList">
+              <option value="/static/icons/pluto.png">🪐 PLUTO App Icon</option>
+              <option value="/static/icons/morpheus.png">🌿 MORPHEUS VAULT Icon</option>
+              <option value="/static/icons/medusa.png">🐍 MEDUSA AI+ Icon</option>
+              <option value="/static/icons/agis.png">🦠 AGIS Antibiogram Icon</option>
+              <option value="/static/icons/drug-borrow.png">🤝 Drug Borrow Icon</option>
+              <option value="/static/icons/fall-risk.jpg">⚠️ Fall Risk Platform Icon</option>
+              <option value="/static/icons/chaba.png">🏥 Chaba Medical Center Icon</option>
+              <option value="/static/icons/dispensingx.svg">💊 easy DISPENSINGX Icon</option>
+              <option value="/static/icons/sentinel.svg">🛰️ Hospital Sentinel Icon</option>
+              <option value="/static/icons/scph-portal.png">🌐 SCPH Web Portal Icon</option>
+              <option value="/static/icons/ollama.png">🤖 Ollama LLM Icon</option>
+              <option value="/static/icons/lotto.jpg">🎰 Thai Lottery AI Icon</option>
+              <option value="/static/icons/hospital-logo.png">🏥 Hospital Logo</option>
+            </datalist>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Emoji ประจำแอป</label>
